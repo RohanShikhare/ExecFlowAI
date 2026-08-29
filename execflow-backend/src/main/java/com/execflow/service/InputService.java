@@ -9,6 +9,8 @@ import com.execflow.exception.ApiException;
 import com.execflow.exception.ResourceNotFoundException;
 import com.execflow.mapper.InputMapper;
 import com.execflow.repository.InputRepository;
+import com.execflow.repository.RecordingRepository;
+import com.execflow.service.storage.StorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +23,19 @@ public class InputService {
 
     private final InputRepository inputRepository;
     private final InputMapper inputMapper;
+    private final RecordingRepository recordingRepository;
+    private final StorageService storageService;
 
-    public InputService(InputRepository inputRepository, InputMapper inputMapper) {
+    public InputService(
+            InputRepository inputRepository,
+            InputMapper inputMapper,
+            RecordingRepository recordingRepository,
+            StorageService storageService
+    ) {
         this.inputRepository = inputRepository;
         this.inputMapper = inputMapper;
+        this.recordingRepository = recordingRepository;
+        this.storageService = storageService;
     }
 
     @Transactional
@@ -61,6 +72,12 @@ public class InputService {
     @Transactional
     public void deleteForUser(UUID userId, UUID inputId) {
         Input input = findOwnedOrThrow(userId, inputId);
+
+        recordingRepository.findByInputId(inputId).ifPresent(recording -> {
+            storageService.delete(recording.getStoragePath());
+            recordingRepository.delete(recording);
+        });
+
         inputRepository.delete(input);
     }
 

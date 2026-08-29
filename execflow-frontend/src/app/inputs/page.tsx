@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, Mic, FileText, Trash2, Plus } from "lucide-react";
+import { Search, Mic, FileText, Trash2, Plus, PlayCircle } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { InlineAudioPlayer } from "@/components/inputs/InlineAudioPlayer";
 import { useInputs, useDeleteInput } from "@/lib/hooks/useInputs";
 import { formatDateTime } from "@/lib/format";
 import type { InputRecord, InputType } from "@/lib/types/input";
@@ -25,6 +26,7 @@ export default function InputsPage() {
 
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<"ALL" | InputType>("ALL");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     if (!inputs) return [];
@@ -126,32 +128,53 @@ export default function InputsPage() {
               </thead>
               <tbody>
                 {filtered.map((input) => (
-                  <tr
-                    key={input.id}
-                    className="border-b border-border last:border-0 hover:bg-canvas/50"
-                  >
-                    <td className="px-5 py-4 font-medium text-ink">
-                      {input.title}
-                    </td>
-                    <td className="px-5 py-4">
-                      <TypeBadge type={input.type} />
-                    </td>
-                    <td className="px-5 py-4 text-muted">
-                      {formatDateTime(input.createdAt)}
-                    </td>
-                    <td className="px-5 py-4">
-                      <StatusBadge status={input.status} />
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <button
-                        onClick={() => handleDelete(input)}
-                        className="rounded-md p-1.5 text-muted hover:bg-status-overdue-bg hover:text-danger"
-                        aria-label={`Delete ${input.title}`}
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    </td>
-                  </tr>
+                  <React.Fragment key={input.id}>
+                    <tr className="border-b border-border last:border-0 hover:bg-canvas/50">
+                      <td className="px-5 py-4 font-medium text-ink">
+                        <div className="flex items-center gap-2">
+                          {input.type === "VOICE" && (
+                            <button
+                              onClick={() =>
+                                setExpandedId(
+                                  expandedId === input.id ? null : input.id
+                                )
+                              }
+                              className="shrink-0 text-muted hover:text-ink"
+                              aria-label="Play recording"
+                            >
+                              <PlayCircle size={17} />
+                            </button>
+                          )}
+                          {input.title}
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <TypeBadge type={input.type} />
+                      </td>
+                      <td className="px-5 py-4 text-muted">
+                        {formatDateTime(input.createdAt)}
+                      </td>
+                      <td className="px-5 py-4">
+                        <StatusBadge status={input.status} />
+                      </td>
+                      <td className="px-5 py-4 text-right">
+                        <button
+                          onClick={() => handleDelete(input)}
+                          className="rounded-md p-1.5 text-muted hover:bg-status-overdue-bg hover:text-danger"
+                          aria-label={`Delete ${input.title}`}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedId === input.id && (
+                      <tr className="border-b border-border bg-canvas/40 last:border-0">
+                        <td colSpan={5} className="px-5 py-3">
+                          <InlineAudioPlayer inputId={input.id} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
@@ -161,7 +184,24 @@ export default function InputsPage() {
               {filtered.map((input) => (
                 <div key={input.id} className="p-4">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="font-medium text-ink">{input.title}</p>
+                    <div className="flex min-w-0 items-center gap-2">
+                      {input.type === "VOICE" && (
+                        <button
+                          onClick={() =>
+                            setExpandedId(
+                              expandedId === input.id ? null : input.id
+                            )
+                          }
+                          className="shrink-0 text-muted hover:text-ink"
+                          aria-label="Play recording"
+                        >
+                          <PlayCircle size={17} />
+                        </button>
+                      )}
+                      <p className="truncate font-medium text-ink">
+                        {input.title}
+                      </p>
+                    </div>
                     <button
                       onClick={() => handleDelete(input)}
                       className="shrink-0 rounded-md p-1 text-muted hover:text-danger"
@@ -177,6 +217,11 @@ export default function InputsPage() {
                   <p className="mt-2 text-xs text-muted">
                     {formatDateTime(input.createdAt)}
                   </p>
+                  {expandedId === input.id && (
+                    <div className="mt-3">
+                      <InlineAudioPlayer inputId={input.id} />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
