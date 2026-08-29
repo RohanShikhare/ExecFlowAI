@@ -1,0 +1,389 @@
+We now have the approved UI/UX designs for **ExecFlow AI** generated using Stitch AI.
+
+I will provide the Stitch-generated designs/screenshots/assets to you.
+
+Your task is to implement the designs in our existing Next.js frontend while preserving the backend architecture and API contracts we previously established.
+
+## IMPORTANT PRIORITY
+
+Use the Stitch designs as the **visual and UX reference**, but do NOT blindly copy generated code or introduce a different architecture.
+
+The existing technical architecture remains:
+
+Frontend:
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* reusable React components
+* typed API client
+* React Query hooks
+
+Backend:
+
+* Java
+* Spring Boot
+* Spring Security
+* JWT
+* JPA/Hibernate
+* PostgreSQL
+* REST APIs
+
+The backend API contract and database model already defined for ExecFlow AI remain the source of truth for data and behavior.
+
+---
+
+# FRONTEND STRUCTURE
+
+Use the existing structure:
+
+src/
+├── app/
+│   ├── (auth)/
+│   ├── dashboard/
+│   ├── inputs/
+│   ├── transcribe/
+│   ├── analyze/
+│   ├── actions/
+│   ├── briefs/
+│   ├── ai-tools/
+│   └── settings/
+├── components/
+│   ├── ui/
+│   ├── layout/
+│   ├── inputs/
+│   ├── analysis/
+│   └── actions/
+├── lib/
+│   ├── api/
+│   ├── hooks/
+│   └── types/
+└── context/
+
+You may reorganize the frontend if the Stitch designs reveal a better component structure, but keep the code modular and maintainable.
+
+---
+
+# DESIGN IMPLEMENTATION RULES
+
+Analyze the Stitch designs carefully before coding.
+
+Extract:
+
+* typography
+* spacing
+* colors
+* borders
+* shadows
+* card styles
+* button styles
+* navigation
+* responsive behavior
+* layout hierarchy
+* component patterns
+* interaction patterns
+
+Create reusable components rather than duplicating markup.
+
+For example:
+
+Button
+Card
+Badge
+Modal
+PageHeader
+Sidebar
+Topbar
+ActionCard
+ActionTable
+InputCard
+StatusBadge
+PriorityBadge
+EmptyState
+LoadingState
+ErrorState
+
+Do not create one giant component for an entire page.
+
+---
+
+# RESPONSIVE DESIGN
+
+This is extremely important.
+
+The application must work exceptionally well on:
+
+* Windows desktop
+* laptop
+* tablet
+* mobile
+
+Desktop and mobile should NOT simply be the same layout scaled down.
+
+Use responsive layouts intentionally.
+
+Desktop:
+
+* persistent sidebar
+* multi-column layouts where appropriate
+* tables
+* dashboard cards
+* large content areas
+
+Mobile:
+
+* drawer/collapsible navigation
+* stacked cards
+* mobile-friendly forms
+* large touch targets
+* simplified menus
+* horizontally scrollable content only when genuinely necessary
+* no clipped text
+* no overflowing containers
+
+Test mentally and structurally against:
+
+1440px
+1280px
+1024px
+768px
+390px
+360px
+
+---
+
+# FUNCTIONALITY
+
+Do not build static mockups.
+
+Connect the UI to the actual backend APIs.
+
+Implement the real workflow:
+
+New Input
+→ Upload/Enter Input
+→ Transcribe
+→ Review Transcript
+→ Analyze
+→ Display Structured Analysis
+→ Extract/Create Actions
+→ Track Actions
+→ Generate Brief/Notes
+
+---
+
+# API INTEGRATION
+
+Use typed API functions in:
+
+src/lib/api/
+
+Use React Query hooks where appropriate.
+
+Do not make raw fetch calls scattered throughout components.
+
+Create reusable API services.
+
+Handle:
+
+* loading
+* success
+* errors
+* authentication failures
+* empty states
+
+---
+
+# CORE PAGES
+
+Implement:
+
+## Dashboard
+
+Use actual dashboard API data.
+
+Display:
+
+* total inputs
+* pending actions
+* in-progress actions
+* completed actions
+* overdue actions
+* recent inputs
+* priority actions
+
+---
+
+## Inputs
+
+Implement:
+
+* create text input
+* create voice input
+* input history
+* search/filter
+* open input
+* delete input
+
+---
+
+## Transcription
+
+Implement:
+
+* audio upload
+* transcription request
+* processing state
+* transcript display
+* transcript editing
+* save transcript
+* analyze button
+
+---
+
+## Analysis
+
+Display:
+
+* Executive Summary
+* Key Points
+* Decisions
+* Action Items
+* Risks
+* Opportunities
+* Follow-ups
+* Important Information
+
+Make the layout highly scannable.
+
+---
+
+## Action Tracker
+
+Implement:
+
+* list actions
+* filtering
+* create
+* edit
+* status change
+* priority change
+* delete
+* overdue indication
+
+Use table on desktop and cards on mobile where appropriate.
+
+---
+
+## Briefs & Notes
+
+Implement:
+
+* list generated documents
+* generate brief
+* generate notes
+* view document
+
+---
+
+## AI Tools
+
+Implement the stateless AI tools using the backend APIs:
+
+* Summarize
+* Improve
+* Make Executive-ready
+* Extract Actions
+* Analyze
+* Generate Recommendations
+* Convert to Notes
+* Generate Brief
+
+---
+
+# UX QUALITY
+
+Do not merely make the frontend functional.
+
+Make it feel polished.
+
+Pay attention to:
+
+* spacing
+* hierarchy
+* typography
+* button placement
+* feedback
+* loading indicators
+* confirmation dialogs
+* toast notifications
+* keyboard usability
+* accessibility
+* empty states
+* error recovery
+
+Avoid unnecessary animations.
+
+Use subtle transitions only where they improve usability.
+
+---
+
+# DO NOT CHANGE
+
+Do not change:
+
+* backend architecture
+* database model
+* API contracts
+
+unless the Stitch design exposes a genuine functional requirement that the existing architecture cannot support.
+
+If you believe a backend/API change is necessary, STOP and explain the proposed change before implementing it.
+
+---
+
+# IMPLEMENTATION PROCESS
+
+Do NOT generate the entire frontend in one giant response.
+
+Implement in modules.
+
+Recommended order:
+
+1. Design system / global styles
+2. Layout / sidebar / topbar / responsive navigation
+3. Authentication pages
+4. Dashboard
+5. Input creation/history
+6. Transcription
+7. Analysis
+8. Action Tracker
+9. Briefs & Notes
+10. AI Tools
+11. Settings
+12. Global loading/error/empty states
+13. Final responsive polish
+
+For each module:
+
+1. Explain what will be implemented.
+2. List files created/modified.
+3. Provide complete code.
+4. Explain integration points.
+5. Tell me exactly how to run/test it.
+6. Do not modify unrelated files.
+7. Preserve previously working functionality.
+
+---
+
+# IMPORTANT
+
+Before writing implementation code, first inspect the Stitch designs I provide and give me:
+
+1. Design system extracted from Stitch
+2. Component inventory
+3. Page-by-page implementation mapping
+4. Responsive behavior
+5. Any conflicts between Stitch designs and our existing architecture
+
+Then wait for approval before implementing the first module.
