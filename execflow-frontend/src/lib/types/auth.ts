@@ -15,6 +15,7 @@ export interface RegisterPayload {
   email: string;
   password: string;
   fullName: string;
+  inviteCode: string;
 }
 
 export interface LoginPayload {

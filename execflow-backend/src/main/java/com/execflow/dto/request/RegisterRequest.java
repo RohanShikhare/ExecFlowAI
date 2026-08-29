@@ -15,6 +15,9 @@ public record RegisterRequest(
         String password,
 
         @NotBlank(message = "Full name is required")
-        String fullName
+        String fullName,
+
+        @NotBlank(message = "An invite code is required to register")
+        String inviteCode
 ) {
 }

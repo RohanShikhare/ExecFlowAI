@@ -34,6 +34,11 @@ execflow:
     secret: ${JWT_SECRET:change-me-in-env-this-is-not-a-real-secret}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24h
 
+  auth:
+    # Invite-only registration: nobody can create an account without this
+    # code. Set it in your .env and only share it with people you approve.
+    registration-secret: ${REGISTRATION_SECRET:}
+
   ai:
     provider: groq
     groq:

@@ -1,11 +1,9 @@
 import type { Config } from "tailwindcss";
 
-// Design tokens for ExecFlow AI.
-// The brief calls for a "professional executive-style" interface, clean
-// rather than flashy, with no unnecessary animation — so the palette stays
-// restrained (cool neutrals + one deep navy accent) and the one place we
-// spend visual "signal" is priority/status color, since that's real data
-// the user needs to scan quickly (not decoration).
+// Design tokens matched to the provided ExecFlow AI mockups: black/white/
+// gray UI, bold sans-serif headings, black primary buttons, and colored
+// pill badges reserved for status/priority (the one place color carries
+// real meaning - not decoration).
 const config: Config = {
   content: [
     "./src/app/**/*.{ts,tsx}",
@@ -14,37 +12,41 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#161A23",        // primary text
-        canvas: "#F5F6F8",     // app background
+        ink: "#14151A",        // primary text / headings
+        canvas: "#F6F7F9",     // app background
         surface: "#FFFFFF",    // cards / panels
-        border: "#E2E4EA",
+        border: "#E5E7EB",
         muted: "#6B7280",
         accent: {
-          DEFAULT: "#1F3A5F",  // deep navy - primary actions, links
-          hover: "#16293F",
+          DEFAULT: "#14151A",  // black - primary buttons/links, per mockups
+          hover: "#000000",
         },
+        danger: "#DC2626",
         priority: {
           low: "#6B7280",
-          medium: "#2B6CB0",
-          high: "#C2751B",
-          urgent: "#B42318",
+          medium: "#14151A",
+          high: "#DC2626",
+          urgent: "#DC2626",
         },
         status: {
           pending: "#6B7280",
-          progress: "#2B6CB0",
-          completed: "#1B8A5A",
-          overdue: "#B42318",
+          "pending-bg": "#F3F4F6",
+          progress: "#B45309",
+          "progress-bg": "#FEF3C7",
+          completed: "#15803D",
+          "completed-bg": "#DCFCE7",
+          overdue: "#B91C1C",
+          "overdue-bg": "#FEE2E2",
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "serif"],
         sans: ["var(--font-sans)", "sans-serif"],
         mono: ["var(--font-mono)", "monospace"],
       },
       borderRadius: {
         sm: "4px",
-        md: "6px",
-        lg: "10px",
+        md: "8px",
+        lg: "12px",
       },
     },
   },

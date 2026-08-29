@@ -5,19 +5,26 @@ export function StatCard({
 }: {
   label: string;
   value: number | string;
-  tone?: "default" | "warning" | "danger";
+  tone?: "default" | "danger";
 }) {
-  const valueColor =
-    tone === "danger"
-      ? "text-priority-urgent"
-      : tone === "warning"
-        ? "text-priority-high"
-        : "text-ink";
-
   return (
-    <div className="rounded-lg border border-border bg-surface p-5">
-      <p className="text-sm text-muted">{label}</p>
-      <p className={`mt-2 font-display text-3xl font-semibold ${valueColor}`}>
+    <div
+      className={`rounded-lg border p-4 sm:p-5 ${
+        tone === "danger"
+          ? "border-status-overdue/20 bg-status-overdue-bg"
+          : "border-border bg-surface"
+      }`}
+    >
+      <p
+        className={`label-caps ${tone === "danger" ? "text-status-overdue" : ""}`}
+      >
+        {label}
+      </p>
+      <p
+        className={`mt-2 text-2xl font-semibold sm:text-3xl ${
+          tone === "danger" ? "text-status-overdue" : "text-ink"
+        }`}
+      >
         {value}
       </p>
     </div>

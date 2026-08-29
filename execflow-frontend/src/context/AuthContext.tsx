@@ -18,7 +18,7 @@ interface AuthContextValue {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, fullName: string) => Promise<void>;
+  register: (email: string, password: string, fullName: string, inviteCode: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -56,8 +56,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   const register = useCallback(
-    async (email: string, password: string, fullName: string) => {
-      const response = await authApi.register({ email, password, fullName });
+    async (email: string, password: string, fullName: string, inviteCode: string) => {
+      const response = await authApi.register({ email, password, fullName, inviteCode });
       window.localStorage.setItem(TOKEN_KEY, response.token);
       setUser(response.user);
       router.push("/dashboard");

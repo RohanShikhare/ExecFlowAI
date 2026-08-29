@@ -7,14 +7,18 @@
     @apply bg-canvas text-ink font-sans antialiased;
   }
 
-  h1, h2, h3 {
-    @apply font-display;
-  }
-
   /* Visible keyboard focus everywhere - accessibility floor, not optional. */
   :focus-visible {
     outline: 2px solid theme("colors.accent.DEFAULT");
     outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  /* Small uppercase tracked labels used for table headers / stat labels,
+     matching the mockups' "TOTAL INPUTS" / "OWNER" / "DEADLINE" style. */
+  .label-caps {
+    @apply text-xs font-medium uppercase tracking-wide text-muted;
   }
 }
 
