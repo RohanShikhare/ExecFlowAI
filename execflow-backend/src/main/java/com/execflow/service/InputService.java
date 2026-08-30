@@ -9,6 +9,8 @@ import com.execflow.exception.ApiException;
 import com.execflow.exception.ResourceNotFoundException;
 import com.execflow.mapper.InputMapper;
 import com.execflow.repository.InputRepository;
+import com.execflow.repository.ActionItemRepository;
+import com.execflow.repository.AnalysisRepository;
 import com.execflow.repository.RecordingRepository;
 import com.execflow.repository.TranscriptRepository;
 import com.execflow.service.storage.StorageService;
@@ -26,6 +28,8 @@ public class InputService {
     private final InputMapper inputMapper;
     private final RecordingRepository recordingRepository;
     private final TranscriptRepository transcriptRepository;
+    private final AnalysisRepository analysisRepository;
+    private final ActionItemRepository actionItemRepository;
     private final StorageService storageService;
 
     public InputService(
@@ -33,12 +37,16 @@ public class InputService {
             InputMapper inputMapper,
             RecordingRepository recordingRepository,
             TranscriptRepository transcriptRepository,
+            AnalysisRepository analysisRepository,
+            ActionItemRepository actionItemRepository,
             StorageService storageService
     ) {
         this.inputRepository = inputRepository;
         this.inputMapper = inputMapper;
         this.recordingRepository = recordingRepository;
         this.transcriptRepository = transcriptRepository;
+        this.analysisRepository = analysisRepository;
+        this.actionItemRepository = actionItemRepository;
         this.storageService = storageService;
     }
 
@@ -82,6 +90,11 @@ public class InputService {
             recordingRepository.delete(recording);
         });
         transcriptRepository.deleteByInputId(inputId);
+
+        analysisRepository.findByInputId(inputId).ifPresent(analysis -> {
+            actionItemRepository.deleteAllByAnalysisId(analysis.getId());
+            analysisRepository.delete(analysis);
+        });
 
         inputRepository.delete(input);
     }

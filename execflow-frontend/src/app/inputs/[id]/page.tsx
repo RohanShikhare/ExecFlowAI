@@ -111,37 +111,36 @@ export default function InputDetailPage() {
           </div>
         </div>
 
-        {isVoice && (
-          <div className="flex shrink-0 flex-wrap gap-2">
-            {transcript && !isEditing && (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-ink hover:bg-canvas"
-              >
-                <Pencil size={14} />
-                Edit
-              </button>
-            )}
-            {transcript && (
-              <button
-                onClick={handleTranscribe}
-                disabled={triggerTranscription.isPending}
-                className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-ink hover:bg-canvas disabled:opacity-50"
-              >
-                <RefreshCw size={14} />
-                Re-transcribe
-              </button>
-            )}
+        <div className="flex shrink-0 flex-wrap gap-2">
+          {isVoice && transcript && !isEditing && (
             <button
-              disabled
-              title="Available once the Analysis module ships"
-              className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-sm font-medium text-white opacity-40"
+              onClick={() => setIsEditing(true)}
+              className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-ink hover:bg-canvas"
+            >
+              <Pencil size={14} />
+              Edit
+            </button>
+          )}
+          {isVoice && transcript && (
+            <button
+              onClick={handleTranscribe}
+              disabled={triggerTranscription.isPending}
+              className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-ink hover:bg-canvas disabled:opacity-50"
+            >
+              <RefreshCw size={14} />
+              Re-transcribe
+            </button>
+          )}
+          {(!isVoice || transcript) && (
+            <Link
+              href={`/inputs/${input.id}/analysis`}
+              className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hover"
             >
               <Sparkles size={14} />
               Analyze
-            </button>
-          </div>
-        )}
+            </Link>
+          )}
+        </div>
       </div>
 
       {actionError && (
