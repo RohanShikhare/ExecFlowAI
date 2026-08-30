@@ -15,6 +15,9 @@ public record ActionItemResponse(
         LocalDate deadline,
         Priority priority,
         ActionStatus status,
+        boolean overdue,
+        /** Title of the input this was extracted from - null for manually created items. */
+        String sourceTitle,
         Instant createdAt,
         Instant updatedAt
 ) {

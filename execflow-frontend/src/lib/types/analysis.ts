@@ -9,6 +9,8 @@ export interface ActionItemRecord {
   deadline: string | null; // ISO date, e.g. "2023-10-15"
   priority: Priority;
   status: ActionStatus;
+  overdue: boolean;
+  sourceTitle: string | null;
   createdAt: string;
   updatedAt: string;
 }
