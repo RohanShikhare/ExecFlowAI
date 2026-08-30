@@ -10,6 +10,7 @@ import com.execflow.exception.ResourceNotFoundException;
 import com.execflow.mapper.InputMapper;
 import com.execflow.repository.InputRepository;
 import com.execflow.repository.RecordingRepository;
+import com.execflow.repository.TranscriptRepository;
 import com.execflow.service.storage.StorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,17 +25,20 @@ public class InputService {
     private final InputRepository inputRepository;
     private final InputMapper inputMapper;
     private final RecordingRepository recordingRepository;
+    private final TranscriptRepository transcriptRepository;
     private final StorageService storageService;
 
     public InputService(
             InputRepository inputRepository,
             InputMapper inputMapper,
             RecordingRepository recordingRepository,
+            TranscriptRepository transcriptRepository,
             StorageService storageService
     ) {
         this.inputRepository = inputRepository;
         this.inputMapper = inputMapper;
         this.recordingRepository = recordingRepository;
+        this.transcriptRepository = transcriptRepository;
         this.storageService = storageService;
     }
 
@@ -77,6 +81,7 @@ public class InputService {
             storageService.delete(recording.getStoragePath());
             recordingRepository.delete(recording);
         });
+        transcriptRepository.deleteByInputId(inputId);
 
         inputRepository.delete(input);
     }

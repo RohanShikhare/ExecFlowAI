@@ -145,7 +145,12 @@ export default function InputsPage() {
                               <PlayCircle size={17} />
                             </button>
                           )}
-                          {input.title}
+                          <Link
+                            href={`/inputs/${input.id}`}
+                            className="hover:underline"
+                          >
+                            {input.title}
+                          </Link>
                         </div>
                       </td>
                       <td className="px-5 py-4">
@@ -199,7 +204,9 @@ export default function InputsPage() {
                         </button>
                       )}
                       <p className="truncate font-medium text-ink">
-                        {input.title}
+                        <Link href={`/inputs/${input.id}`} className="hover:underline">
+                          {input.title}
+                        </Link>
                       </p>
                     </div>
                     <button
