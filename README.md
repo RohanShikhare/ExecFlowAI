@@ -132,7 +132,7 @@ Edit `execflow-backend/.env`:
 | `JWT_SECRET` | **Yes** | Any long random string, 32+ characters. `openssl rand -hex 32` works well |
 | `REGISTRATION_SECRET` | **Yes** | Your private invite code — see [Registration is invite-only](#registration-is-invite-only) |
 | `GROQ_API_KEY` | **Yes** | From step 1 above |
-| `GROQ_MODEL` | No | Defaults to `llama-3.3-70b-versatile` |
+| `GROQ_MODEL` | No | Defaults to `openai/gpt-oss-20b` |
 | `STORAGE_BASE_PATH` | No | Defaults to `./uploads`; Docker Compose overrides this to a named volume |
 | `WHISPER_SERVICE_URL` | No | Defaults to `http://whisper:9000` for Docker; for manual runs point it at wherever you run Whisper |
 | `WHISPER_MODEL` (compose-level, not backend) | No | Set in your shell or root `.env`, defaults to `base`. Bigger = more accurate, slower, more RAM |

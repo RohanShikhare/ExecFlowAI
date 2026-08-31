@@ -253,7 +253,7 @@ public class GroqAiProviderService implements AiProviderService {
 
         } catch (WebClientResponseException e) {
             throw new ApiException(HttpStatus.BAD_GATEWAY,
-                    "AI provider error (" + e.getStatusCode() + "). Check GROQ_API_KEY is set and valid.");
+                    "AI provider error (" + e.getStatusCode() + "): " + e.getResponseBodyAsString());
         } catch (WebClientRequestException e) {
             throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE,
                     "Could not reach the AI provider. Check your network connection.");
