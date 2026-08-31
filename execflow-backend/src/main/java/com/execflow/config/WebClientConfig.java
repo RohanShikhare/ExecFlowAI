@@ -15,22 +15,6 @@ import java.time.Duration;
 public class WebClientConfig {
 
     @Bean
-    public WebClient whisperWebClient(@Value("${execflow.whisper.service-url}") String baseUrl) {
-        // Local/CPU Whisper inference on a long recording can take minutes -
-        // a default (much shorter) HTTP timeout would fail large voice
-        // notes outright, so this is deliberately generous.
-        HttpClient httpClient = HttpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5_000)
-                .responseTimeout(Duration.ofMinutes(10));
-
-        return WebClient.builder()
-                .baseUrl(baseUrl)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(50 * 1024 * 1024))
-                .build();
-    }
-
-    @Bean
     public WebClient groqWebClient(
             @Value("${execflow.ai.groq.base-url}") String baseUrl,
             @Value("${execflow.ai.groq.api-key}") String apiKey

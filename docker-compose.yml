@@ -26,8 +26,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      whisper:
-        condition: service_started
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/execflow
       DB_USERNAME: execflow
@@ -37,8 +35,8 @@ services:
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GROQ_BASE_URL: ${GROQ_BASE_URL:-https://api.groq.com/openai/v1}
       GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-20b}
+      GROQ_TRANSCRIPTION_MODEL: ${GROQ_TRANSCRIPTION_MODEL:-whisper-large-v3-turbo}
       STORAGE_BASE_PATH: /app/uploads
-      WHISPER_SERVICE_URL: http://whisper:9000
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8080:8080"
@@ -56,23 +54,6 @@ services:
     ports:
       - "3000:3000"
 
-  # Free, self-hosted speech-to-text. First startup downloads the model
-  # weights (~150MB for "base") - that's the only time it needs internet.
-  # Swap ASR_MODEL to "small" or "medium" for better accuracy at the cost
-  # of speed/RAM; "base" is a reasonable default on modest hardware.
-  whisper:
-    image: onerahmet/openai-whisper-asr-webservice:latest
-    container_name: execflow-whisper
-    restart: unless-stopped
-    environment:
-      ASR_MODEL: ${WHISPER_MODEL:-base}
-      ASR_ENGINE: openai_whisper
-    ports:
-      - "9000:9000"
-    volumes:
-      - execflow-whisper-cache:/root/.cache/whisper
-
 volumes:
   execflow-pg-data:
   execflow-uploads:
-  execflow-whisper-cache:

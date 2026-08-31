@@ -1,6 +1,8 @@
 package com.execflow.service.ai;
 
 import com.execflow.exception.ApiException;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,32 +14,34 @@ import org.springframework.web.reactive.function.client.WebClientRequestExceptio
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Service
-public class WhisperTranscriptionClient implements TranscriptionClient {
+public class GroqTranscriptionClient implements TranscriptionClient {
 
-    private final WebClient whisperWebClient;
+    private final WebClient groqWebClient;
+    private final String model;
 
-    public WhisperTranscriptionClient(WebClient whisperWebClient) {
-        this.whisperWebClient = whisperWebClient;
+    public GroqTranscriptionClient(
+            WebClient groqWebClient,
+            @Value("${execflow.ai.groq.transcription-model}") String model
+    ) {
+        this.groqWebClient = groqWebClient;
+        this.model = model;
     }
 
     @Override
     public String transcribe(Resource audioResource, String fileName, String contentType) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
-        builder.part("audio_file", audioResource)
+        builder.part("model", model);
+        builder.part("file", audioResource)
                 .filename(fileName)
                 .contentType(MediaType.parseMediaType(contentType));
 
         try {
-            WhisperResponse response = whisperWebClient.post()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/asr")
-                            .queryParam("task", "transcribe")
-                            .queryParam("output", "json")
-                            .build())
+            GroqTranscriptionResponse response = groqWebClient.post()
+                    .uri("/audio/transcriptions")
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .body(BodyInserters.fromMultipartData(builder.build()))
                     .retrieve()
-                    .bodyToMono(WhisperResponse.class)
+                    .bodyToMono(GroqTranscriptionResponse.class)
                     .block();
 
             if (response == null || response.text() == null || response.text().isBlank()) {
@@ -50,15 +54,14 @@ public class WhisperTranscriptionClient implements TranscriptionClient {
         } catch (WebClientResponseException e) {
             throw new ApiException(HttpStatus.BAD_GATEWAY,
                     "Transcription service error (" + e.getStatusCode() + "). "
-                            + "Check that the audio file is valid and the Whisper service is healthy.");
+                            + "Check that the audio file is valid and the Groq transcription config is correct.");
         } catch (WebClientRequestException e) {
             throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE,
-                    "Could not reach the transcription service. Is it running? "
-                            + "Check WHISPER_SERVICE_URL and that the container is up.");
+                    "Could not reach the transcription service. Check your network connection and Groq configuration.");
         }
     }
 
-    /** Matches the JSON shape returned by openai-whisper-asr-webservice with output=json. */
-    private record WhisperResponse(String text) {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private record GroqTranscriptionResponse(String text) {
     }
 }
