@@ -261,7 +261,7 @@ GET    /actions                                 ?status=&priority=&overdue=
 POST   /actions
 PUT    /actions/{id}
 PATCH  /actions/{id}/status
-DELETE /actions/{id}
+DELETE /actions/{id}/
 
 POST   /inputs/{id}/documents/brief
 POST   /inputs/{id}/documents/notes
