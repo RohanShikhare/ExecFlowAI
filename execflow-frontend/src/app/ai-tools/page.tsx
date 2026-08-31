@@ -185,8 +185,8 @@ export default function AiToolsPage() {
           )}
 
           {output && !runTool.isPending && (
-            <div className="flex-1 overflow-y-auto">
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+            <div className="flex-1">
+              <p className="ai-output-scroll whitespace-pre-wrap text-sm leading-relaxed text-ink">
                 {output}
               </p>
             </div>

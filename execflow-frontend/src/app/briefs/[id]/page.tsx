@@ -211,7 +211,11 @@ function Section({
 }
 
 function Prose({ text }: { text: string }) {
-  return <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">{text}</p>;
+  return (
+    <p className="ai-output-scroll whitespace-pre-wrap text-sm leading-relaxed text-ink">
+      {text}
+    </p>
+  );
 }
 
 function BulletList({ items }: { items: string[] }) {

@@ -176,7 +176,7 @@ export default function AnalysisPage() {
               icon={<FileText size={16} />}
               className="lg:col-span-2"
             >
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink">
+              <p className="ai-output-scroll whitespace-pre-wrap text-sm leading-relaxed text-ink">
                 {analysis.executiveSummary || "No summary was generated."}
               </p>
             </SectionCard>
