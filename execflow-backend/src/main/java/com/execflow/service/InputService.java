@@ -11,6 +11,7 @@ import com.execflow.mapper.InputMapper;
 import com.execflow.repository.InputRepository;
 import com.execflow.repository.ActionItemRepository;
 import com.execflow.repository.AnalysisRepository;
+import com.execflow.repository.DocumentRepository;
 import com.execflow.repository.RecordingRepository;
 import com.execflow.repository.TranscriptRepository;
 import com.execflow.service.storage.StorageService;
@@ -30,6 +31,7 @@ public class InputService {
     private final TranscriptRepository transcriptRepository;
     private final AnalysisRepository analysisRepository;
     private final ActionItemRepository actionItemRepository;
+    private final DocumentRepository documentRepository;
     private final StorageService storageService;
 
     public InputService(
@@ -39,6 +41,7 @@ public class InputService {
             TranscriptRepository transcriptRepository,
             AnalysisRepository analysisRepository,
             ActionItemRepository actionItemRepository,
+            DocumentRepository documentRepository,
             StorageService storageService
     ) {
         this.inputRepository = inputRepository;
@@ -47,6 +50,7 @@ public class InputService {
         this.transcriptRepository = transcriptRepository;
         this.analysisRepository = analysisRepository;
         this.actionItemRepository = actionItemRepository;
+        this.documentRepository = documentRepository;
         this.storageService = storageService;
     }
 
@@ -95,6 +99,7 @@ public class InputService {
             actionItemRepository.deleteAllByAnalysisId(analysis.getId());
             analysisRepository.delete(analysis);
         });
+        documentRepository.deleteAllByInputId(inputId);
 
         inputRepository.delete(input);
     }

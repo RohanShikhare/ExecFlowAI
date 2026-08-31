@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ChevronRight,
@@ -14,12 +14,14 @@ import {
   ClipboardList,
   RefreshCw,
   FileOutput,
+  NotebookPen,
 } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { PriorityBadge } from "@/components/ui/PriorityBadge";
 import { useInput } from "@/lib/hooks/useInputs";
 import { useAnalysis, useTriggerAnalysis } from "@/lib/hooks/useAnalysis";
+import { useGenerateBrief, useGenerateNotes } from "@/lib/hooks/useDocuments";
 import { formatDate } from "@/lib/format";
 import { extractErrorMessage } from "@/lib/api/errors";
 
@@ -41,6 +43,7 @@ function BulletList({ items, emptyLabel }: { items: string[]; emptyLabel: string
 
 export default function AnalysisPage() {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   const { data: input, isLoading: inputLoading } = useInput(id);
@@ -50,11 +53,33 @@ export default function AnalysisPage() {
     isError: analysisNotFound,
   } = useAnalysis(id, Boolean(input));
   const triggerAnalysis = useTriggerAnalysis(id);
+  const generateBrief = useGenerateBrief();
+  const generateNotes = useGenerateNotes();
 
   async function handleGenerate() {
     setError(null);
     try {
       await triggerAnalysis.mutateAsync();
+    } catch (err) {
+      setError(extractErrorMessage(err));
+    }
+  }
+
+  async function handleGenerateBrief() {
+    setError(null);
+    try {
+      const doc = await generateBrief.mutateAsync(id);
+      router.push(`/briefs/${doc.id}`);
+    } catch (err) {
+      setError(extractErrorMessage(err));
+    }
+  }
+
+  async function handleGenerateNotes() {
+    setError(null);
+    try {
+      const doc = await generateNotes.mutateAsync(id);
+      router.push(`/briefs/${doc.id}`);
     } catch (err) {
       setError(extractErrorMessage(err));
     }
@@ -103,12 +128,20 @@ export default function AnalysisPage() {
               Regenerate
             </button>
             <button
-              disabled
-              title="Available once the Briefs & Notes module ships"
-              className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-sm font-medium text-white opacity-40"
+              onClick={handleGenerateNotes}
+              disabled={generateNotes.isPending}
+              className="flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm font-medium text-ink hover:bg-canvas disabled:opacity-50"
+            >
+              <NotebookPen size={14} />
+              {generateNotes.isPending ? "Generating…" : "Generate Notes"}
+            </button>
+            <button
+              onClick={handleGenerateBrief}
+              disabled={generateBrief.isPending}
+              className="flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hover disabled:opacity-50"
             >
               <FileOutput size={14} />
-              Generate Brief
+              {generateBrief.isPending ? "Generating…" : "Generate Brief"}
             </button>
           </div>
         )}
